@@ -1,0 +1,47 @@
+---
+- name: apt update
+  become: yes
+  apt:
+    update_cache: yes
+- name: install bootstrap applications
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - build-essential
+    - git
+    - cmake
+    - vim
+    - zsh
+- name: clone dotfiles
+  become: no
+  git:
+    repo: https://github.com/keigo-brook/dotfiles.git
+    dest: ~/dotfiles
+    recursive: yes
+- name: install files
+  become: no
+  shell: ~/dotfiles/install.sh
+  args:
+    chdir: ~/dotfiles
+- name: install myzsh
+  become: no
+  git:
+    repo: https://github.com/keigo-brook/prezto.git
+    dest: "~/.zprezto"
+    recursive: yes
+- name: install myzsh
+  become: no
+  shell: >-
+    ln -s ~/.zprezto/runcoms/zlogin ~/.zlogin;
+    ln -s ~/.zprezto/runcoms/zlogout ~/.zlogout;
+    ln -s ~/.zprezto/runcoms/zpreztorc ~/.zpreztorc;
+    ln -s ~/.zprezto/runcoms/zprofile ~/.zprofile;
+    ln -s ~/.zprezto/runcoms/zshenv ~/.zshenv;
+    ln -s ~/.zprezto/runcoms/zshrc ~/.zshrc;
+- name: update login shell
+  user:
+    name: vagrant
+    shell: /usr/bin/zsh

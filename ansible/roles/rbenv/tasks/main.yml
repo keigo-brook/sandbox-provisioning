@@ -1,0 +1,22 @@
+- name: install rbenv
+  become: no
+  git:
+    repo: https://github.com/sstephenson/rbenv.git
+    dest: ~/.rbenv
+- name: install ruby-build
+  become: no
+  git:
+    repo: https://github.com/sstephenson/ruby-build.git
+    dest: ~/.rbenv/plugins/ruby-build
+- name: add rbenv path
+  become: no
+  lineinfile: >
+    dest=~/.bashrc
+    line='PATH="~/.rbenv/bin:/sbin/:${PATH}"'
+    create=yes
+- name: set .rbenv path
+  become: no
+  lineinfile: >
+    dest=~/.bashrc
+    line='eval "$(rbenv init -)"'
+    create=yes
