@@ -45,3 +45,16 @@
   user:
     name: vagrant
     shell: /usr/bin/zsh
+
+- name: download peco
+  unarchive:
+    src: https://github.com/peco/peco/releases/download/v0.5.1/peco_linux_amd64.tar.gz
+    dest: /tmp/
+    remote_src: yes
+
+- name: install peco
+  copy:
+    src: /tmp/peco_linux_amd64/peco
+    dest: /usr/local/bin/
+    remote_src: yes
+    mode: 0755
